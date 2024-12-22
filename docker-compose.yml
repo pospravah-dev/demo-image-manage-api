@@ -1,0 +1,43 @@
+version: '3.8'
+
+services:
+  postgres:
+    image: postgres:16.6
+    container_name: postgres-imagedata
+    environment:
+      POSTGRES_DB: imagedata
+      POSTGRES_USER: imageusername
+      POSTGRES_PASSWORD: imagepassword
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres-data:/var/lib/postgresql/data
+    networks:
+      - app_network
+
+  app:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: demo-image-manage-api
+    environment:
+      - SPRING_APPLICATION_NAME=demo-image-manage-api
+      - SPRING_R2DBC_URL=r2dbc:postgresql://postgres:5432/imagedata
+      - SPRING_R2DBC_USERNAME=imageusername
+      - SPRING_R2DBC_PASSWORD=imagepassword
+    ports:
+      - "8080:8080"
+    depends_on:
+      - postgres
+    volumes:
+      - ./target:/usr/src/app
+    working_dir: /usr/src/app
+    networks:
+      - app_network
+
+volumes:
+  postgres-data:
+
+networks:
+  app_network:
+    driver: bridge

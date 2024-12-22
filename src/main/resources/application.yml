@@ -1,0 +1,23 @@
+spring:
+  profiles:
+    active: default
+  application:
+    name=demo-image-manage-api
+  r2dbc:
+    url: r2dbc:postgresql://postgres:5432/imagedata # make sure container postgres use instead localhost
+    username: imageusername
+    password: imagepassword
+  flyway:
+    enable: true
+    locations: classpath:db/migration
+    baseline-on-migrate: true
+    url: jdbc:postgresql://postgres:5432/imagedata # make sure container postgres use instead localhost
+    user: imageusername
+    password: imagepassword
+
+logging:
+  level:
+    root: INFO
+    edu.nvs.manage: DEBUG  # Adjust this to package name
+  pattern:
+    console: "%d{yyyy-MM-dd HH:mm:ss} - %msg%n"
