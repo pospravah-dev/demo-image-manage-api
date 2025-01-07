@@ -51,7 +51,7 @@ public class SlideshowControllerTest extends TestBaseConfig {
         AddSlideshow addSlideshow = new AddSlideshow("Title", "Description", List.of(imageUrl1, imageUrl2));
         when(slideshowService.addSlideshow(any(AddSlideshow.class))).thenReturn(Mono.just(1L));
 
-        webTestClient.post().uri("/api/slideshows/addSlideshow")
+        webTestClient.post().uri("/addSlideshow")
                 .contentType(MediaType.APPLICATION_JSON)
                 .bodyValue(addSlideshow)
                 .exchange()
@@ -66,7 +66,7 @@ public class SlideshowControllerTest extends TestBaseConfig {
         AddSlideshow addSlideshow = new AddSlideshow("Title", "Description", null );
         when(slideshowService.addSlideshow(any(AddSlideshow.class))).thenReturn(Mono.just(1L));
 
-        webTestClient.post().uri("/api/slideshows/addSlideshow")
+        webTestClient.post().uri("/addSlideshow")
                 .contentType(MediaType.APPLICATION_JSON)
                 .bodyValue(addSlideshow)
                 .exchange()
@@ -78,7 +78,7 @@ public class SlideshowControllerTest extends TestBaseConfig {
     void deleteSlideshow() {
         when(slideshowService.deleteSlideshowById(any(Long.class))).thenReturn(Mono.empty());
 
-        webTestClient.delete().uri("/api/slideshows/deleteSlideshow/1")
+        webTestClient.delete().uri("/deleteSlideshow/1")
                 .exchange()
                 .expectStatus().isOk();
     }
@@ -94,7 +94,7 @@ public class SlideshowControllerTest extends TestBaseConfig {
 
         when(slideshowService.getSlideshowOrder(any(Long.class))).thenReturn(imageUrlFlux);
 
-        webTestClient.get().uri("/api/slideshows/1/slideshowOrder")
+        webTestClient.get().uri("/slideShow/1/slideshowOrder")
                 .exchange()
                 .expectStatus().isOk()
                 .expectBodyList(ImageUrlOut.class)
@@ -106,7 +106,7 @@ public class SlideshowControllerTest extends TestBaseConfig {
     void recordProofOfPlay() {
         when(proofOfPlayService.recordProofOfPlay(any(Long.class), any(Long.class))).thenReturn(Mono.empty());
 
-        webTestClient.get().uri("/api/slideshows/1/proof-of-play/2")
+        webTestClient.post().uri("/slideShow/1/proof-of-play/2")
                 .exchange()
                 .expectStatus().isOk();
     }

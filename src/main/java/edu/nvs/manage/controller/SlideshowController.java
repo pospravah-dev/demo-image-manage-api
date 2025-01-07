@@ -18,7 +18,6 @@ import java.util.List;
 import static org.springframework.http.ResponseEntity.status;
 
 @RestController
-@RequestMapping("/api/slideshows")
 @RequiredArgsConstructor
 public class SlideshowController implements SlideshowAPI {
     private final SlideshowService slideshowService;
@@ -37,13 +36,13 @@ public class SlideshowController implements SlideshowAPI {
     }
 
     @Override
-    @GetMapping("/{id}/slideshowOrder")
+    @GetMapping("/slideShow/{id}/slideshowOrder")
     public Mono<ResponseEntity<Flux<ImageUrl>>> getSlideshowOrder(@PathVariable Long id) {
         return Mono.just(ResponseEntity.ok(slideshowService.getSlideshowOrder(id)));
     }
 
     @Override
-    @GetMapping("/{slideshowId}/proof-of-play/{imageId}")
+    @PostMapping("/slideShow/{slideshowId}/proof-of-play/{imageId}")
     public Mono<Void> recordProofOfPlay(@PathVariable Long slideshowId, @PathVariable Long imageId) {
         return proofOfPlayService.recordProofOfPlay(slideshowId, imageId).then();
     }

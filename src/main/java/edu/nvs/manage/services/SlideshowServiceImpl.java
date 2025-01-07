@@ -3,7 +3,8 @@ package edu.nvs.manage.services;
 import edu.nvs.manage.dto.AddSlideshow;
 import edu.nvs.manage.entity.ImageUrl;
 import edu.nvs.manage.entity.Slideshow;
-import edu.nvs.manage.events.CustomSpringEventPublisher;
+import edu.nvs.manage.events.ImageEventsDto;
+import edu.nvs.manage.events.producer.ImageEventProducer;
 import edu.nvs.manage.validation.exceptions.ResourceNotFoundException;
 import edu.nvs.manage.repository.ImageUrlRepository;
 import edu.nvs.manage.repository.SlideshowImageUrlRepository;
@@ -19,8 +20,8 @@ import reactor.core.scheduler.Schedulers;
 
 import java.util.stream.Collectors;
 
-import static edu.nvs.manage.events.CustomSpringEventPublisher.ImageEvents.ADD_SLIDESHOW;
-import static edu.nvs.manage.events.CustomSpringEventPublisher.ImageEvents.DELETE_SLIDESHOW;
+import static edu.nvs.manage.events.ImageEventsDto.ImageEvents.ADD_SLIDESHOW;
+import static edu.nvs.manage.events.ImageEventsDto.ImageEvents.DELETE_SLIDESHOW;
 
 @Service
 @RequiredArgsConstructor
@@ -29,12 +30,12 @@ public class SlideshowServiceImpl implements SlideshowService {
     private final SlideshowRepository slideshowRepository;
     private final ImageUrlRepository imageUrlRepository;
     private final SlideshowImageUrlRepository slideshowImageUrlRepository;
-    private final CustomSpringEventPublisher eventPublisher;
+    private final ImageEventProducer ImageEventProducer;
 
     @Override
     public Mono<Long> addSlideshow(AddSlideshow addSlideshow) {
         return createSlideshowAndFillImages(addSlideshow)
-                .doOnSuccess(id -> eventPublisher.publishCustomEvent(ADD_SLIDESHOW, id));
+                .doOnSuccess( id -> ImageEventProducer.sendImageEvent(new ImageEventsDto(ADD_SLIDESHOW, id)));
     }
 
     @Transactional
@@ -77,7 +78,7 @@ public class SlideshowServiceImpl implements SlideshowService {
                             if(exist){
                                 return slideshowImageUrlRepository.deleteAllBySlideshowId(id)
                                         .then(slideshowRepository.deleteById(id))
-                                        .doOnSuccess(it -> eventPublisher.publishCustomEvent(DELETE_SLIDESHOW, id))
+                                        .doOnSuccess(it -> ImageEventProducer.sendImageEvent(new ImageEventsDto(DELETE_SLIDESHOW, id)))
                                         .then(Mono.empty());
                             } else {
                                 return Mono.error(new ResourceNotFoundException("No slideshow found: "+ id + "."));

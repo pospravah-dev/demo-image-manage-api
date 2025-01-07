@@ -16,7 +16,6 @@ import reactor.core.publisher.Mono;
 import static org.springframework.http.ResponseEntity.status;
 
 @RestController
-@RequestMapping("/api/images")
 @RequiredArgsConstructor
 @Validated
 public class ImageController implements ImageAPI {
@@ -35,7 +34,7 @@ public class ImageController implements ImageAPI {
     }
 
     @Override
-    @GetMapping("/search")
+    @GetMapping("/images/search")
     public Flux<ImageUrl> searchImages(@RequestParam String keyword, @RequestParam Integer duration) {
         return imageService.searchImages(keyword, duration);
     }

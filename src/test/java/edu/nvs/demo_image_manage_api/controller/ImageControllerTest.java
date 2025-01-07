@@ -48,7 +48,7 @@ public class ImageControllerTest extends TestBaseConfig {
         AddImageUrl addImageUrl = new AddImageUrl( 1L, "http://example.com/image789.jpg", 10);
         given(imageService.addImageUrl(any(AddImageUrl.class))).willReturn(Mono.just(1L));
 
-        webTestClient.post().uri("/api/images/addImage")
+        webTestClient.post().uri("/addImage")
                 .bodyValue(addImageUrl)
                 .exchange()
                 .expectStatus().isCreated()
@@ -61,7 +61,7 @@ public class ImageControllerTest extends TestBaseConfig {
         AddImageUrl addImageUrl = new AddImageUrl( 1L, "httz://example.com/image789.jpg", 10);
         given(imageService.addImageUrl(any(AddImageUrl.class))).willReturn(Mono.just(1L));
 
-        webTestClient.post().uri("/api/images/addImage")
+        webTestClient.post().uri("/addImage")
                 .bodyValue(addImageUrl)
                 .exchange()
                 .expectStatus().isBadRequest();
@@ -71,7 +71,7 @@ public class ImageControllerTest extends TestBaseConfig {
     void deleteImage() {
         given(imageService.deleteImageById(eq(1L))).willReturn(Mono.empty());
 
-        webTestClient.delete().uri("/api/images/deleteImage/1")
+        webTestClient.delete().uri("/deleteImage/1")
                 .exchange()
                 .expectStatus().isOk();
     }
@@ -87,7 +87,7 @@ public class ImageControllerTest extends TestBaseConfig {
         given(imageService.searchImages("example", 10)).willReturn(Flux.just(imageUrl1, imageUrl2));
 
         webTestClient.get().uri(uriBuilder -> uriBuilder
-                .path("/api/images/search")
+                .path("/images/search")
                 .queryParam("keyword", "example")
                 .queryParam("duration", 10)
                 .build())

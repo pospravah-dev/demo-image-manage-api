@@ -24,8 +24,8 @@ repositories {
 }
 
 dependencies {
+	// Reactive
 	implementation 'org.springframework.boot:spring-boot-starter-webflux'
-
 	// DB Starts
 	implementation 'org.springframework.boot:spring-boot-starter-data-r2dbc'
 	implementation 'org.postgresql:postgresql' // Since Flayway doesn’t yet support the R2DBC driver
@@ -41,6 +41,9 @@ dependencies {
 	testImplementation 'org.mockito:mockito-junit-jupiter'
 	testImplementation 'org.springframework.boot:spring-boot-test'
 	testImplementation 'org.springframework.boot:spring-boot-test-autoconfigure'
+	// Spring Cloud Stream
+	implementation 'org.springframework.cloud:spring-cloud-starter-stream-kafka:4.2.0'
+	implementation 'org.springframework.cloud:spring-cloud-stream-reactive:2.2.1.RELEASE'
 	// JUnit 5 for testing
 	testImplementation 'org.junit.jupiter:junit-jupiter-api'
 	testRuntimeOnly 'org.junit.jupiter:junit-jupiter-engine'

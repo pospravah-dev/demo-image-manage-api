@@ -23,7 +23,7 @@ public class GlobalExceptionHandler {
     @ExceptionHandler(ResourceNotFoundException.class)
     @ResponseStatus(HttpStatus.NOT_FOUND)
     public ResponseEntity<ErrorResponse> handleResourceNotFoundException(ResourceNotFoundException ex) {
-        log.info("ResourceNotFoundException - {}", ex.getStackTrace());
+        log.info("ResourceNotFoundException - {}", ex.getMessage());
         return ResponseEntity.status(HttpStatus.NOT_FOUND).body(new ErrorResponse(ex.getMessage()));
     }
 
@@ -33,14 +33,14 @@ public class GlobalExceptionHandler {
         List<ValidationErrorResponse> errors = ex.getConstraintViolations().stream()
                 .map(violation ->
                         new ValidationErrorResponse(violation.getPropertyPath().toString(), violation.getMessage())).collect(Collectors.toList());
-        log.info("ConstraintViolationException - {}", ex.getStackTrace());
+        log.info("ConstraintViolationException - {}", ex.getMessage());
         return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(errors);
     }
 
     @ExceptionHandler(ServerWebInputException.class)
     @ResponseStatus(HttpStatus.BAD_REQUEST)
     public ResponseEntity<ErrorResponse> handleWebExchangeBindException(ServerWebInputException ex) {
-        log.info("WebExchangeBindException - {}", ex.getStackTrace());
+        log.info("WebExchangeBindException - {}", ex.getMessage());
         return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(new ErrorResponse(ex.getMessage()));
     }
 
@@ -49,14 +49,14 @@ public class GlobalExceptionHandler {
     public ResponseEntity<List<ValidationErrorResponse>> handleWebExchangeBindException(WebExchangeBindException ex) {
         List<ValidationErrorResponse> errors = ex.getBindingResult().getFieldErrors().stream()
                 .map(error -> new ValidationErrorResponse(error.getField(), error.getDefaultMessage())).collect(Collectors.toList());
-        log.info("WebExchangeBindException - {}", ex.getStackTrace());
+        log.info("WebExchangeBindException - {}", ex.getMessage());
         return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(errors);
     }
 
     @ExceptionHandler(Exception.class)
     @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
     public ResponseEntity<ErrorResponse> handleException(Exception ex) {
-        log.info("Exception - {}", ex.getStackTrace());
+        log.info("Exception - {}", ex.getMessage());
         return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(new ErrorResponse("An unexpected error occurred " + ex.getMessage()));
     }
 }
